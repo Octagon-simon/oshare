@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+html,
+body {
+    scroll-behavior: smooth;
+    /*font-family: 'Poppins', sans-serif;*/
+    /*font-family: 'Montaga', serif;*/
+    height: 100%;
+    font-family: 'poppins', sans-serif;
+}
+
+div#root {
+    height: auto !important;
+    min-height: 100%;
+}
+
+.font-montaga {
+    font-family: 'Montaga', serif !important;
+}
+
+.font-poppins {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.glass{
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    /*backdrop-filter: blur(5px);*/
+    /*-webkit-backdrop-filter: blur(5px);*/
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .home-title{
+        font-size: 2.5rem;
+    }
+    
+::-webkit-scrollbar {
+    width: 0px;
+    height: 8px;
+    background-color: #eee;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #b7b7b7;
+    border-radius: 5px;
+}
+.d-none {
+    display: none !important;
+}
+
+.d-hidden {
+    opacity: 0;
+    height: 0;
+}
+
+.hero {
+    height: 100vh;
+    /* background: rgb(29, 17, 218); */
+    background: linear-gradient(90deg, #FC466B 0%, #3F5EFB 100%);
+}
+
+.btn-act {
+    border-radius: 5px !important;
+}
+
+.is-current {
+    background-color: var(--primary) !important;
+}
+.is-app-primary {
+    border-color: var(--primary);
+    background-color: var(--primary) !important;
+    color: #fff !important;
+}
+
+.is-app-primary-outline {
+    border-color: var(--primary);
+    background-color: #fff !important;
+    color: var(--primary) !important;
+}
+.is-app-primary:hover {
+    border-color: var(--primary) !important;
+}
+.btn-act.is-app-primary:hover {
+    transform: translateY(-10px);
+    box-shadow: 5px 5px 0px 0px #000;
+}
+
+.m-none{
+    margin : 0 !important;
+}
+.tabs.is-toggle li.is-active a{
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+}
+.section-upload{
+    max-width: 500px;
+    margin:auto;
+}
+.upload-tabs{
+    margin: 10% 0;
+}
+.upload-container{
+    box-shadow: 0 .5em 1em -.125em rgba(10,10,10,.1),0 0 0 1px rgba(10,10,10,.02);
+    display: none;
+}
+.upload-container section{
+    margin: 20px 0;
+}
+.is-secondary{
+    color: #fff;
+    background-color: var(--secondary);
+}
+.d-block{
+    display:block !important;
+}
+.d-none{
+    display:none;
+}
+:root{
+    --primary: rgb(0, 4, 255);
+    --secondary: #c44d96;
+}
