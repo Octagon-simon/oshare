@@ -3,9 +3,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from './pages/layouts/Navbar';
 import Home from './pages/Home';
+import Links from './pages/Links';
+import Download from './pages/Download';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <BrowserRouter>
@@ -13,6 +14,8 @@ function App() {
       <Route path="/" element={<Navbar />}>
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
+          <Route path="links" element={<Links />} />
+          <Route path="download/:fileLink" element={<Download />} />
           {/* <Route path="test" element={<Test />} />
           <Route path="posts" element={<Posts />} />
           <Route path="new-post" element={<NewPost />} />

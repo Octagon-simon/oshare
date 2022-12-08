@@ -2,7 +2,7 @@ import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 //import { useToken } from '../../useToken'
 import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
-
+import "react-toastify/dist/ReactToastify.css";
 export default function Navbar() {
     const location = useLocation()
     //const { token, setToken, destroyToken } = useToken();
@@ -152,6 +152,9 @@ export default function Navbar() {
                         </div> */}
                         <Link onClick={unToggleMobileNav} to="/about" className="navbar-item">
                             About us
+                        </Link>
+                        <Link onClick={unToggleMobileNav} to="/links" className="navbar-item">
+                            My Links
                         </Link>
                         <Link onClick={unToggleMobileNav} to="/contact" className="navbar-item">
                             Contact us
