@@ -42,5 +42,7 @@ Well, here are the new things that I learnt in this project
  
     In as much as we mutate other fields by directly assigning a value to them using JavaScript, in a file input, you have to create a new instance of a `DataTransfer()` object, mutate the object and then reassign the files from this object to the file input.
 
-- You can't remove a node when it has been rendered by `react`
+- You can't remove a node after it has been rendered by `react`
+- Figured out a better way to handle drag and drop in react using `React Dropzone`
+- You can't use the `download` atttribute on an anchor tag to download a file that is not on the same server. So you must create an Object URL that will handle the download
   
