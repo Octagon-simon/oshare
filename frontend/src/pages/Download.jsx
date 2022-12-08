@@ -6,6 +6,7 @@ export default function Download() {
     const fileLink = useParams().fileLink.trim()
     const navigate = useNavigate()
     const [data, setData] = useState({})
+    const [error, setError] = useState("")
     const {getHours} = useTimeFormat()
     // if(!fileLink) {
     //     navigate('/', {
@@ -57,6 +58,7 @@ export default function Download() {
                     setData(response.data);
                 } else {
                     //handle errors here
+                    setError(response.data.message)
                 }
             })
             .catch(err => {
@@ -96,56 +98,68 @@ export default function Download() {
     }
     return (
         <>
-        <section className="container download-container">
-            <div className="columns">
-                <div className="column is-half">&nbsp;</div>
-                <div className="column is-half" style={{maxWidth: "450px", margin:"auto"}}>
-                    {/* <ul className="file-stats p-5">
-                        <li><span><span className="tag is-info">{data.file_views}</span> Views</span></li>
-                        <li><span><span className="tag is-info">{data.file_downloads || 0}</span> Downloads</span></li>
-                    </ul> */}
-                    <h4 className="title is-5 mb-2">FILE STATS</h4>
-                    <table className="table is-bordered is-fullwidth">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    File Views
-                                </td>
-                                <td>
-                                    {data.file_views}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    File Downloads
-                                </td>
-                                <td>
-                                    {data.file_downloads || 0}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Last Downloaded On
-                                </td>
-                                <td>
-                                    {data.file_last_download_date || ""}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+        { (Object.keys(data).length) ?
+            <section className="container download-container">
+                <div className="columns">
+                    <div className="column is-half">&nbsp;</div>
+                    <div className="column is-half" style={{maxWidth: "450px", margin:"auto"}}>
+                        {/* <ul className="file-stats p-5">
+                            <li><span><span className="tag is-info">{data.file_views}</span> Views</span></li>
+                            <li><span><span className="tag is-info">{data.file_downloads || 0}</span> Downloads</span></li>
+                        </ul> */}
+                        <h4 className="title is-5 mb-2">FILE STATS</h4>
+                        <table className="table is-bordered is-fullwidth">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        File Views
+                                    </td>
+                                    <td>
+                                        {data.file_views || 0}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        File Downloads
+                                    </td>
+                                    <td>
+                                        {data.file_downloads || 0}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Last Downloaded On
+                                    </td>
+                                    <td>
+                                        {data.file_last_download_date || ""}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <div className="notification is-info is-light">
-                <p className="m-0 has-text-centered">This file will be deleted after <b>{getHours(new Date(data.exp_time))}</b> Hours</p>
-            </div>
-            <div className="download-section">
-                <section className="has-text-centered">
-                    <img width="150px" src="/file-download.svg" />
-                    <h4 className="title is-6 mt-4">File Name: {data.file_name}</h4>
-                    <button className="button is-app-primary btn-act radius-0" onClick={doDownload}>Download Now</button>
-                </section>
-            </div>
-        </section>
+                <div className="notification is-info is-light">
+                    <p className="m-0 has-text-centered">This file will be deleted after <b>{getHours(new Date(data.exp_time))}</b> Hours</p>
+                </div>
+                <div className="download-section">
+                    <section className="has-text-centered">
+                        <img width="150px" src="/file-download.svg" />
+                        <h4 className="title is-6 mt-4">File Name: {data.file_name}</h4>
+                        <p className="has-text-centered mb-5">
+                            <span className="file-size tag is-info is-light">{Math.round(Number(data.file_size) / 1024 / 1024)} Mb</span>
+                        </p>
+                        <button className="button is-app-primary btn-act radius-0" onClick={doDownload}>Download Now</button>
+                    </section>
+                </div>
+            </section>
+        : 
+            <section className="container caution-container">
+                <div className="has-text-centered">
+                    <img src="/caution.svg" width="150px" />
+                    <p class="mt-2 title is-4">{error}</p>
+                </div>
+            </section>
+        }
         </>
     )
 }

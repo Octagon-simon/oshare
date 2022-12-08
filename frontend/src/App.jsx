@@ -5,6 +5,8 @@ import Navbar from './pages/layouts/Navbar';
 import Home from './pages/Home';
 import Links from './pages/Links';
 import Download from './pages/Download';
+import Contact from './pages/Contact';
+import About from './pages/About';
 
 function App() {
 
@@ -15,6 +17,8 @@ function App() {
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
           <Route path="links" element={<Links />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
           <Route path="download/:fileLink" element={<Download />} />
           {/* <Route path="test" element={<Test />} />
           <Route path="posts" element={<Posts />} />

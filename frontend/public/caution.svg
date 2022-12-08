@@ -1,0 +1,6 @@
+<svg id="caution" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <rect id="Rectangle_1" data-name="Rectangle 1" width="48" height="48" fill="rgba(255,255,255,0.01)"/>
+  <path id="Path_2" data-name="Path 2" d="M24,5,2,43H46Z" fill="#0004ff" stroke="rgba(0,4,255,0.2)" stroke-linejoin="round" stroke-width="4" fill-rule="evenodd"/>
+  <path id="Path_3" data-name="Path 3" d="M24,35v1" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="4"/>
+  <path id="Path_4" data-name="Path 4" d="M24,19l.008,10" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="4"/>
+</svg>

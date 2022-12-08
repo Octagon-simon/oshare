@@ -105,12 +105,16 @@ div#root {
 .btn-act:hover {
     transform: translateY(-10px);
     box-shadow: 5px 5px 0px 0px #000;
+    transition: transform .5s;
 }
 
 .m-none {
     margin: 0 !important;
 }
 
+.m-auto{
+    margin: auto !important;
+}
 .tabs.is-toggle li.is-active:first-child a {
     background-color: #00d1b2;
     border-color: #00d1b2;
@@ -272,43 +276,88 @@ div#root {
 .list-inline-item:not(:last-child) {
     margin-right: .5rem
 }
-.final-modal-section .copy-link{
+
+.final-modal-section .copy-link {
     max-width: 300px;
     margin: 20px auto;
 }
-.inp-link{
+
+.inp-link {
     background-color: #eee;
-border: 0;
+    border: 0;
 }
-.history-container, .download-container{
+
+.history-container,
+.download-container {
     max-width: 850px !important;
-    margin-top: 50px ;
+    margin-top: 50px;
     padding: 10px;
 }
-.download-section{
+
+.download-section {
     box-shadow: 0 .5em 1em -.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
     padding: 20px;
 }
-.media-content{
+
+.shadow {
+    box-shadow: 0 .5em 1em -.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
+}
+
+.media-content {
     overflow-y: hidden !important;
 }
-.table-responsive{
+
+.table-responsive {
     overflow-x: auto;
 }
-.fw-bold{
+
+.fw-bold {
     font-weight: bold;
 }
-ul.file-stats{
-    padding:30px
+
+ul.file-stats {
+    padding: 30px
 }
-ul.file-stats li:not(:last-child){
+
+ul.file-stats li:not(:last-child) {
     margin: 0 0 30px 0;
 }
-ul.file-stats li>span{
+
+ul.file-stats li>span {
     background-color: #eef6fc;
     color: #1d72aa;
     padding: 10px;
     border-radius: 5px;
+}
+.progress-section{
+    margin:10px 0;
+}
+.progress.is-secondary::-webkit-progress-value {
+    background-color: var(--secondary)
+}
+
+.progress.is-secondary::-moz-progress-bar {
+    background-color: var(--secondary)
+}
+
+.progress.is-secondary::-ms-fill {
+    background-color: var(--secondary)
+}
+
+span.file-size{
+    max-width: 100px;
+    display: block;
+    margin: auto;
+    padding: 10px;
+    height: auto;
+    font-size: 1rem;
+}
+
+.caution-container{
+    background-color: #0004FF0D;
+    margin: 10% auto;
+    padding: 30px;
+    max-width: 700px !important;
 }
 :root {
     --primary: rgb(0, 4, 255);

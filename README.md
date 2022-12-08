@@ -31,3 +31,16 @@ What technologies were used to build Oshare?
 - PHP
 - MySQL
 - Cuttly (URL Shortening service)
+
+## ✍ THINGS I LEARNT
+
+Whenever I build a project, I learn new things and also update my exisiting knowledge.
+
+Well, here are the new things that I learnt in this project
+
+- You can't directly mutate a file input. 
+ 
+    In as much as we mutate other fields by directly assigning a value to them using JavaScript, in a file input, you have to create a new instance of a `DataTransfer()` object, mutate the object and then reassign the files from this object to the file input.
+
+- You can't remove a node when it has been rendered by `react`
+  

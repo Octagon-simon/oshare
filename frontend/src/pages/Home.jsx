@@ -8,9 +8,10 @@ import useLinkAction from "./hooks/LinkAction";
 import useTimeFormat from "./hooks/TimeFormat";
 
 export default function Home() {
-    const {saveLink} = useLinkAction()
+    const { saveLink } = useLinkAction()
     const [data, setData] = useState({})
-    const {addExpiry} = useTimeFormat()
+    const [progress, setProgress] = useState(0)
+    const { addExpiry } = useTimeFormat()
     function MyDropzone({ open }) {
         console.log("reloaded")
 
@@ -88,9 +89,9 @@ export default function Home() {
             margin: "auto"
         }
         return (
-            <div className="container" onClick={open} style={style}>
+            <div id="inp_multi_file_wrapper" className="container" onClick={open} style={style}>
                 <div {...getRootProps({ className: "dropzone" })}>
-                    <input id="inp_multi_file" {...getInputProps()} />
+                    <input name="multi_files[]" octavalidate="R" id="inp_multi_file" {...getInputProps()} />
                     <div className="text-center">
                         {isDragActive ? (
                             <p className="dropzone-content">
@@ -144,24 +145,24 @@ export default function Home() {
                         <div className="separator">Or</div>
                         <section className="copy-link">
                             <h6 className="mb-2 title is-6">Copy the link</h6>
-                        <div className="field is-flex">
-                            <input readOnly className="input radius-end-0 inp-link" placeholder="Copy the link" defaultValue={prop.link} />
-                            <button title="Click here to copy this Link" data-link={btoa(prop.link)} className="button is-info radius-end" onClick={handleCopy}>Copy</button>
-                        </div>
+                            <div className="field is-flex">
+                                <input readOnly className="input radius-end-0 inp-link" placeholder="Copy the link" defaultValue={prop.link} />
+                                <button title="Click here to copy this Link" data-link={btoa(prop.link)} className="button is-info radius-end" onClick={handleCopy}>Copy</button>
+                            </div>
                         </section>
 
                         <div className="field">
                             <ul className="list-unstyled list-inline mt-2 ml-0">
                                 <li className="list-inline-item">
                                     <a target="_blank" title="Share this on Twitter" className="button is-info"
-                                    href={"https://twitter.com/intent/tweet?text="+encodeURIComponent(prop.link)} role="button"><i className="fab fa-twitter"></i></a></li>
+                                        href={"https://twitter.com/intent/tweet?text=" + encodeURIComponent(prop.link)} role="button"><i className="fab fa-twitter"></i></a></li>
                                 <li className="list-inline-item">
                                     <a target="_blank" title="Share this on Facebook" className="button is-info "
-                                        href={"https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(prop.link)} role="button"><i className="fab fa-facebook-f"></i></a>
+                                        href={"https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(prop.link)} role="button"><i className="fab fa-facebook-f"></i></a>
                                 </li>
                                 <li className="list-inline-item">
                                     <a target="_blank" title="Share this on Linkedin" className="button  is-info"
-                                        href={"https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(prop.link)} role="button"><i
+                                        href={"https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(prop.link)} role="button"><i
                                             className="fab fa-linkedin-in"></i></a>
                                 </li>
                             </ul>
@@ -228,34 +229,161 @@ export default function Home() {
             //send timezone too because of delete hours
             formData.append('timezone', Intl.DateTimeFormat().resolvedOptions().timeZone)
             //upload the file
-            fetch(import.meta.env.VITE_BACKEND_URL + '/single_upload.php', {
-                method: "POST",
-                body: formData,
-                mode: 'cors'
-            })
-                .then(res => res.json())
-                .then(response => {
-                    if (response.success) {
-                        btn.classList.remove('is-loading')
-                        btn.removeAttribute("disabled", "disabled")
-                        toast.success(`${response.data.message}!`);
-                        setData(response.data);
-                        saveLink({
-                            link : response.data.link,
-                            expTime : addExpiry()
-                        });
-                        //show modal
-                        //reset form
-                        //form.reset()
-                    } else {
-                        btn.classList.remove('is-loading')
-                        btn.removeAttribute("disabled", "disabled")
-                        toast.error(`${response.data.message}!`);
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+            // fetch(import.meta.env.VITE_BACKEND_URL + '/single_upload.php', {
+            //     method: "POST",
+            //     body: formData,
+            //     mode: 'cors'
+            // })
+            //     .then(res => res.json())
+            //     .then(response => {
+            //         if (response.success) {
+            //             btn.classList.remove('is-loading')
+            //             btn.removeAttribute("disabled", "disabled")
+            //             toast.success(`${response.data.message}!`);
+            //             setData(response.data);
+            //             saveLink({
+            //                 link: response.data.link,
+            //                 expTime: addExpiry()
+            //             });
+            //             //show modal
+            //             //reset form
+            //             //form.reset()
+            //         } else {
+            //             btn.classList.remove('is-loading')
+            //             btn.removeAttribute("disabled", "disabled")
+            //             toast.error(`${response.data.message}!`);
+            //         }
+            //     })
+            //     .catch(err => {
+            //         console.log(err)
+            //     })
+            
+            var xhr = new XMLHttpRequest();
+
+            // listen for upload progress
+            xhr.upload.onprogress = function (event) {
+                document.querySelector('#single_progress_section').classList.remove('d-none')
+                setProgress(Math.round(100 * event.loaded / event.total));
+            };
+
+            // handle error
+            xhr.upload.onerror = function () {
+                console.log(`Error during the upload: ${xhr.status}.`);
+            };
+
+            // upload completed successfully
+            xhr.onload = function (res) {
+                let response = JSON.parse(res.target.responseText)
+                document.querySelector('#single_progress_section').classList.toggle('d-none')
+                if (response.success) {
+                    btn.classList.remove('is-loading')
+                    btn.removeAttribute("disabled", "disabled")
+                    toast.success(`${response.data.message}!`);
+                    setData(response.data);
+                    saveLink({
+                        link: response.data.link,
+                        expTime: addExpiry()
+                    });
+                    //show modal
+                    //reset form
+                    //form.reset()
+                } else {
+                    btn.classList.remove('is-loading')
+                    btn.removeAttribute("disabled", "disabled")
+                    toast.error(`${response.data.message}!`);
+                }
+            };
+
+            xhr.open('POST', import.meta.env.VITE_BACKEND_URL + '/single_upload.php');
+            xhr.send(formData);
+        }
+    }
+
+    const handleMultiFileUpload = (e) => {
+        const btn = e.target.querySelector(`button[form="${e.target.id}"]`)
+        //prevent reload
+        e.preventDefault()
+        const myForm = new octaValidate('upload_multiple', {
+            errorElem: {
+                'inp_multi_file': 'inp_multi_file_wrapper'
+            }
+        });
+        if (myForm.validate()) {
+            //put button in loading state
+            btn.classList.toggle('is-loading')
+            btn.setAttribute("disabled", "disabled")
+            //form data
+            const formData = new FormData(e.target);
+            //send timezone too because of delete hours
+            formData.append('timezone', Intl.DateTimeFormat().resolvedOptions().timeZone)
+            //upload the file
+            // fetch(import.meta.env.VITE_BACKEND_URL + '/multi_upload.php', {
+            //     method: "POST",
+            //     body: formData,
+            //     mode: 'cors'
+            // })
+            //     .then(res => res.json())
+            //     .then(response => {
+            //         if (response.success) {
+            //             btn.classList.remove('is-loading')
+            //             btn.removeAttribute("disabled", "disabled")
+            //             toast.success(`${response.data.message}!`);
+            //             setData(response.data);
+            //             saveLink({
+            //                 link : response.data.link,
+            //                 expTime : addExpiry()
+            //             });
+            //             //show modal
+            //             //reset form
+            //             //form.reset()
+            //         } else {
+            //             btn.classList.remove('is-loading')
+            //             btn.removeAttribute("disabled", "disabled")
+            //             toast.error(`${response.data.message}!`);
+            //         }
+            //     })
+            //     .catch(err => {
+            //         console.log(err)
+            //     })
+
+            var xhr = new XMLHttpRequest();
+
+            // listen for upload progress
+            xhr.upload.onprogress = function (event) {
+                document.querySelector('#multi_progress_section').classList.remove('d-none')
+                setProgress(Math.round(100 * event.loaded / event.total));
+            };
+
+            // handle error
+            xhr.upload.onerror = function () {
+                console.log(`Error during the upload: ${xhr.status}.`);
+            };
+
+            // upload completed successfully
+            xhr.onload = function (res) {
+                let response = JSON.parse(res.target.responseText)
+                document.querySelector('#multi_progress_section').classList.toggle('d-none')
+                if (response.success) {
+                    btn.classList.remove('is-loading')
+                    btn.removeAttribute("disabled", "disabled")
+                    toast.success(`${response.data.message}!`);
+                    setData(response.data);
+                    saveLink({
+                        link: response.data.link,
+                        expTime: addExpiry()
+                    });
+                    //show modal
+                    //reset form
+                    //form.reset()
+                } else {
+                    btn.classList.remove('is-loading')
+                    btn.removeAttribute("disabled", "disabled")
+                    toast.error(`${response.data.message}!`);
+                }
+            };
+
+            xhr.open('POST', import.meta.env.VITE_BACKEND_URL + '/multi_upload.php');
+            xhr.send(formData);
         }
     }
 
@@ -293,7 +421,7 @@ export default function Home() {
     return (
         <>
             {
-                (Object.keys(data).length) ? <DoFinal prop={data} /> : null 
+                (Object.keys(data).length) ? <DoFinal prop={data} /> : null
             }
             <section className="hero is-medium has-navbar-fixed-top">
                 <div className="hero-body">
@@ -353,6 +481,9 @@ export default function Home() {
                                     </span>
                                 </label>
                             </div>
+                            <div id="single_progress_section" className="progress-section d-none">
+                                <progress className="progress is-primary" value={progress} max="100">{progress}%</progress>
+                            </div>
                             <div className="field mt-4">
                                 <button form="upload_single" type="submit" className="button is-primary">Upload file</button>
                             </div>
@@ -367,7 +498,7 @@ export default function Home() {
                                 <p className="m-none">All Uploaded files last for 24 hours</p>
                             </div>
                         </section>
-                        <form action="ss" id="upload_multiple" encType="multipart/form-data">
+                        <form action="" id="upload_multiple" encType="multipart/form-data" onSubmit={handleMultiFileUpload}>
                             {/* {
                             React.useEffect(() => {
                                 if (renderDropzoneCont) {
@@ -378,8 +509,11 @@ export default function Home() {
                         }
                          */}
                             <MyDropzone />
+                            <div id="multi_progress_section" className="progress-section d-none">
+                                <progress className="progress is-danger" value={progress} max="100">{progress}%</progress>
+                            </div>
                             <div className="field mt-4">
-                                <button className="button is-app-secondary">Upload file</button>
+                                <button form="upload_multiple" type="submit" className="button is-app-secondary">Upload file</button>
                             </div>
                         </form>
                     </div>
