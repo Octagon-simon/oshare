@@ -1,14 +1,16 @@
 import React, {useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useTimeFormat from "./hooks/TimeFormat";
+import useLinkAction from "./hooks/LinkAction";
 
 export default function Download() {
-    const fileLink = useParams().fileLink.trim()
+    const fileId = useParams().fileId.trim()
     const navigate = useNavigate()
     const [data, setData] = useState({})
     const [error, setError] = useState("")
     const {getHours} = useTimeFormat()
-    // if(!fileLink) {
+    const {deleteLink} = useLinkAction()
+    // if(!fileId) {
     //     navigate('/', {
     //         replace : true
     //     })
@@ -25,7 +27,11 @@ export default function Download() {
      * 
      * dashboard -> add new customer, image (not required, premium), contact(premium),   name, measurement, due_date(premium users)
      * 
+     * create a new customer, then add measurements
+     * 
      * settings => phone_number, alt_phone, tailor profile image 
+     * 
+     //feedback or issue report form
      * 
      */
     function downloadFile(url, fileName) {
@@ -42,37 +48,39 @@ export default function Download() {
                 URL.revokeObjectURL(href);
             });
     };
-    React.useEffect( () => {
-        if(fileLink){
-        const url = new URL(import.meta.env.VITE_BACKEND_URL + '/file_meta.php');
-        //add file link as query to the url object
-        url.searchParams.append('fileLink', fileLink);
-
-        fetch(url.href, {
-            method: "GET",
-            mode: 'cors'
-        })
-            .then(res => res.json())
-            .then(response => {
-                if (response.success) {
-                    setData(response.data);
-                } else {
-                    //handle errors here
-                    setError(response.data.message)
-                }
-            })
-            .catch(err => {
-                console.log(err)
+    React.useEffect(() => {
+        if (fileId) {
+            const url = new URL(import.meta.env.VITE_BACKEND_URL + '/file_meta.php');
+            //add file link as query to the url object
+            url.searchParams.append('fileId', fileId);
+            window.addEventListener('load', function () {
+                fetch(url.href, {
+                    method: "GET",
+                    mode: 'cors'
+                })
+                    .then(res => res.json())
+                    .then(response => {
+                        if (response.success) {
+                            setData(response.data);
+                        } else {
+                            //handle errors here
+                            setError(response.data.message)
+                            deleteLink(fileId);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             })
         }
-//ask sir about this duplicate request stuff
-    }, [fileLink])
+        //ask sir about this duplicate request stuff
+    }, [fileId])
 
     //init request to download file
     const doDownload = () => {
         const url = new URL(import.meta.env.VITE_BACKEND_URL + '/download.php');
         //add file link as query to the url object
-        url.searchParams.append('fileLink', fileLink);
+        url.searchParams.append('fileId', fileId);
         fetch(url.href, {
             method: "GET",
             mode: 'cors'
@@ -131,7 +139,7 @@ export default function Download() {
                                         Last Downloaded On
                                     </td>
                                     <td>
-                                        {data.file_last_download_date || ""}
+                                        {data.file_last_download_date || "No Downloads yet"}
                                     </td>
                                 </tr>
                             </tbody>
@@ -144,7 +152,7 @@ export default function Download() {
                 <div className="download-section">
                     <section className="has-text-centered">
                         <img width="150px" src="/file-download.svg" />
-                        <h4 className="title is-6 mt-4">File Name: {data.file_name}</h4>
+                        <p className="mt-4 mb-4"><span className="title is-6">File Name:</span> {data.file_name}</p>
                         <p className="has-text-centered mb-5">
                             <span className="file-size tag is-info is-light">{Math.round(Number(data.file_size) / 1024 / 1024)} Mb</span>
                         </p>
@@ -156,7 +164,7 @@ export default function Download() {
             <section className="container caution-container">
                 <div className="has-text-centered">
                     <img src="/caution.svg" width="150px" />
-                    <p class="mt-2 title is-4">{error}</p>
+                    <p className="mt-2 title is-4">{error}</p>
                 </div>
             </section>
         }

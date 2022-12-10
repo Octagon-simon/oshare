@@ -1,0 +1,10 @@
+Header set Access-Control-Allow-Origin "http://localhost:5173"
+Header set Access-Control-Allow-Methods "GET,POST"
+Header set Access-Control-Allow-Headers "Content-Type"
+
+RewriteEngine on
+
+##FILES
+RewriteCond %{REQUEST_METHOD} GET
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule files/(.*)$ api/uploads/$1 [QSA,L]

@@ -19,7 +19,7 @@ function App() {
           <Route path="links" element={<Links />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
-          <Route path="download/:fileLink" element={<Download />} />
+          <Route path="download/:fileId" element={<Download />} />
           {/* <Route path="test" element={<Test />} />
           <Route path="posts" element={<Posts />} />
           <Route path="new-post" element={<NewPost />} />

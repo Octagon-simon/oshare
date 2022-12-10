@@ -20,7 +20,7 @@ const useTimeFormat = () => {
     }
 
     const getHours = (time2) => {
-        time2 *=1
+        time2 *= 1
         //get timestamp of date
         const stamp = (time1 > time2) ? time1 - time2 : time2 - time1;
         //new timestamp

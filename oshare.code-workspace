@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "frontend"
+		},
+		{
+			"path": "../../../../../wamp64/www/oshare"
+		}
+	],
+	"settings": {}
+}

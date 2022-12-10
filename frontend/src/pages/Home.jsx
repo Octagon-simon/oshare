@@ -13,7 +13,6 @@ export default function Home() {
     const [progress, setProgress] = useState(0)
     const { addExpiry } = useTimeFormat()
     function MyDropzone({ open }) {
-        console.log("reloaded")
 
         const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
             useDropzone({});
@@ -78,6 +77,7 @@ export default function Home() {
                 </div>
             </React.Fragment>
         ));
+        
         const style = {
             border: "2px dashed var(--secondary)",
             padding: "10px",
@@ -113,9 +113,7 @@ export default function Home() {
             </div>
         );
     }
-    React.useEffect(() => {
-        console.log(data)
-    }, [data])
+
     const DoFinal = ({ prop }) => {
         console.log(data)
         console.log("final foolishly loaded")
@@ -172,7 +170,8 @@ export default function Home() {
             )
         }
         const closeModal = () => {
-            document.querySelector('.modal').classList.remove('is-active')
+            document.querySelector('.modal').classList.remove('is-active');
+            document.querySelector('.final-modal-section')?.classList.toggle("d-none")
         }
         return (
             <>
@@ -212,7 +211,8 @@ export default function Home() {
         );
     }
     const handleSingleFileUpload = (e) => {
-        const btn = e.target.querySelector(`button[form="${e.target.id}"]`)
+        const form = e.target;
+        const btn = e.target.querySelector(`button[form="${form.id}"]`)
         //prevent reload
         e.preventDefault()
         const myForm = new octaValidate('upload_single', {
@@ -225,39 +225,10 @@ export default function Home() {
             btn.classList.toggle('is-loading')
             btn.setAttribute("disabled", "disabled")
             //form data
-            const formData = new FormData(e.target);
+            const formData = new FormData(form);
             //send timezone too because of delete hours
             formData.append('timezone', Intl.DateTimeFormat().resolvedOptions().timeZone)
-            //upload the file
-            // fetch(import.meta.env.VITE_BACKEND_URL + '/single_upload.php', {
-            //     method: "POST",
-            //     body: formData,
-            //     mode: 'cors'
-            // })
-            //     .then(res => res.json())
-            //     .then(response => {
-            //         if (response.success) {
-            //             btn.classList.remove('is-loading')
-            //             btn.removeAttribute("disabled", "disabled")
-            //             toast.success(`${response.data.message}!`);
-            //             setData(response.data);
-            //             saveLink({
-            //                 link: response.data.link,
-            //                 expTime: addExpiry()
-            //             });
-            //             //show modal
-            //             //reset form
-            //             //form.reset()
-            //         } else {
-            //             btn.classList.remove('is-loading')
-            //             btn.removeAttribute("disabled", "disabled")
-            //             toast.error(`${response.data.message}!`);
-            //         }
-            //     })
-            //     .catch(err => {
-            //         console.log(err)
-            //     })
-            
+
             var xhr = new XMLHttpRequest();
 
             // listen for upload progress
@@ -282,9 +253,9 @@ export default function Home() {
                     setData(response.data);
                     saveLink({
                         link: response.data.link,
+                        file_id : response.data.file_id,
                         expTime: addExpiry()
                     });
-                    //show modal
                     //reset form
                     //form.reset()
                 } else {
@@ -300,7 +271,8 @@ export default function Home() {
     }
 
     const handleMultiFileUpload = (e) => {
-        const btn = e.target.querySelector(`button[form="${e.target.id}"]`)
+        const form = e.target;
+        const btn = e.target.querySelector(`button[form="${form.id}"]`)
         //prevent reload
         e.preventDefault()
         const myForm = new octaValidate('upload_multiple', {
@@ -313,38 +285,9 @@ export default function Home() {
             btn.classList.toggle('is-loading')
             btn.setAttribute("disabled", "disabled")
             //form data
-            const formData = new FormData(e.target);
+            const formData = new FormData(form);
             //send timezone too because of delete hours
             formData.append('timezone', Intl.DateTimeFormat().resolvedOptions().timeZone)
-            //upload the file
-            // fetch(import.meta.env.VITE_BACKEND_URL + '/multi_upload.php', {
-            //     method: "POST",
-            //     body: formData,
-            //     mode: 'cors'
-            // })
-            //     .then(res => res.json())
-            //     .then(response => {
-            //         if (response.success) {
-            //             btn.classList.remove('is-loading')
-            //             btn.removeAttribute("disabled", "disabled")
-            //             toast.success(`${response.data.message}!`);
-            //             setData(response.data);
-            //             saveLink({
-            //                 link : response.data.link,
-            //                 expTime : addExpiry()
-            //             });
-            //             //show modal
-            //             //reset form
-            //             //form.reset()
-            //         } else {
-            //             btn.classList.remove('is-loading')
-            //             btn.removeAttribute("disabled", "disabled")
-            //             toast.error(`${response.data.message}!`);
-            //         }
-            //     })
-            //     .catch(err => {
-            //         console.log(err)
-            //     })
 
             var xhr = new XMLHttpRequest();
 
@@ -370,9 +313,9 @@ export default function Home() {
                     setData(response.data);
                     saveLink({
                         link: response.data.link,
+                        file_id : response.data.file_id,
                         expTime: addExpiry()
                     });
-                    //show modal
                     //reset form
                     //form.reset()
                 } else {
