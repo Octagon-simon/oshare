@@ -43,4 +43,16 @@ Well, here are the new things that I learnt in this project
 - You can't remove a node after it has been rendered by `react`
 - Figured out a better way to handle drag and drop in react using `React Dropzone`
 - You can't use the `download` atttribute on an anchor tag to download a file that is not on the same server. So you must create an Object URL that will handle the download
-  
+- If you are running your react app on **strict mode**, it will cause your components to be rendered twice
+- Some people using this app may not be on the same timezone as the server, So I have learnt and implemented a way to properly handle files uploaded based on their timezones.
+- Lastly, You can't figure it out all alone! Reach out to your mentors and tutors and they will guide you 💝
+
+## THANK YOU
+
+Oshare was **once** developed with a *no-code* platform (wappler). 
+
+But I was kicked out of their community because I had issues with their software and they discovered that I was not a paid member. 
+
+Then they asked me rudely, to learn how to code and I did just that 😃
+
+Oshare stands to be my last personal project for **2022**
