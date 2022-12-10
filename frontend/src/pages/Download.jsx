@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useTimeFormat from "./hooks/TimeFormat";
 import useLinkAction from "./hooks/LinkAction";
+import DoMeta from "./functions/doMeta";
 
 export default function Download() {
     const fileId = useParams().fileId.trim()
@@ -115,17 +116,16 @@ export default function Download() {
                 console.log(err)
             })
     }
+
     return (
         <>
         { (Object.keys(data).length) ?
+        <>
+            <DoMeta title={"Download - " + data.file_name} desc={"Visit this page to download "+data.file_name} image="/file-download.svg" />
             <section className="container download-container">
                 <div className="columns">
                     <div className="column is-half">&nbsp;</div>
                     <div className="column is-half" style={{maxWidth: "450px", margin:"auto"}}>
-                        {/* <ul className="file-stats p-5">
-                            <li><span><span className="tag is-info">{data.file_views}</span> Views</span></li>
-                            <li><span><span className="tag is-info">{data.file_downloads || 0}</span> Downloads</span></li>
-                        </ul> */}
                         <h4 className="title is-5 mb-2">FILE STATS</h4>
                         <table className="table is-bordered is-fullwidth">
                             <tbody>
@@ -171,6 +171,7 @@ export default function Download() {
                     </section>
                 </div>
             </section>
+            </>
         : 
             <section className="container caution-container">
                 <div className="has-text-centered">

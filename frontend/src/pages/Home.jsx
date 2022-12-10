@@ -6,6 +6,7 @@ import { useDropzone } from 'react-dropzone'
 import { ToastContainer, toast } from 'react-toastify';
 import useLinkAction from "./hooks/LinkAction";
 import useTimeFormat from "./hooks/TimeFormat";
+import DoMeta from "./functions/doMeta";
 
 export default function Home() {
     const { saveLink } = useLinkAction()
@@ -77,7 +78,7 @@ export default function Home() {
                 </div>
             </React.Fragment>
         ));
-        
+
         const style = {
             border: "2px dashed var(--secondary)",
             padding: "10px",
@@ -250,7 +251,7 @@ export default function Home() {
                     setData(response.data);
                     saveLink({
                         link: response.data.link,
-                        file_id : response.data.file_id,
+                        file_id: response.data.file_id,
                         expTime: addExpiry()
                     });
                     //reset form
@@ -310,7 +311,7 @@ export default function Home() {
                     setData(response.data);
                     saveLink({
                         link: response.data.link,
-                        file_id : response.data.file_id,
+                        file_id: response.data.file_id,
                         expTime: addExpiry()
                     });
                     //reset form
@@ -357,12 +358,12 @@ export default function Home() {
             document.querySelector('li#single').classList.remove('is-active');
         }
     }
-
     return (
         <>
             {
                 (Object.keys(data).length) ? <DoFinal prop={data} /> : null
             }
+            <DoMeta title={"Oshare: Homepage"} desc={"Upload any file and share the link"} image="/oshare-new.png" />
             <section className="hero is-medium has-navbar-fixed-top">
                 <div className="hero-body">
                     <div className="container m-none" style={{ top: '30%' }}>

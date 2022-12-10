@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { QRCodeSVG } from 'qrcode.react';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import useLinkAction from "./hooks/LinkAction";
 import useTimeFormat from "./hooks/TimeFormat";
+import DoMeta from "./functions/doMeta";
 
 export default function Links() {
     const [data, setData] = useState("")
     const [showModal, setShowModal] = useState(false)
-    const {savedLinks} = useLinkAction()
-    const {checkValidity, getHours} = useTimeFormat();
+    const { savedLinks } = useLinkAction()
+    const { checkValidity, getHours } = useTimeFormat();
     //do if validity has passed, unset the item from session storage
     const handleCopy = (e) => {
         const link = e.target.getAttribute('data-link')
@@ -31,29 +32,31 @@ export default function Links() {
             document.querySelector('.modal').classList.remove('is-active')
             setShowModal(false)
         }
-            return (
-                <>
-                    <div className="modal is-active">
-                        <div className="modal-background"></div>
-                        <div className="modal-content">
-                            <div className="box">
-                                <article className="media">
-                                    <div className="media-content">
-                                        <div className="content has-text-centered">
-                                            <QRCodeSVG value={link} />
-                                            <h6 className="title is-6 mt-2 mb-0">Scan the QR Code</h6>
-                                        </div>
+        return (
+            <>
+                <div className="modal is-active">
+                    <div className="modal-background"></div>
+                    <div className="modal-content">
+                        <div className="box">
+                            <article className="media">
+                                <div className="media-content">
+                                    <div className="content has-text-centered">
+                                        <QRCodeSVG value={link} />
+                                        <h6 className="title is-6 mt-2 mb-0">Scan the QR Code</h6>
                                     </div>
-                                </article>
-                            </div>
+                                </div>
+                            </article>
                         </div>
-                        <button onClick={closeModal} className="modal-close is-large" aria-label="close"></button>
                     </div>
-                </>
-            )
+                    <button onClick={closeModal} className="modal-close is-large" aria-label="close"></button>
+                </div>
+            </>
+        )
     }
+
     return (
         <>
+            <DoMeta title={"Oshare: My Links"} desc={"View & Copy links to files that you have uploaded"} image="/oshare-new.png" />
             <div className="container history-container mw-500 p-3 mt-5">
                 <h4 className="title is-4 mb-3">My Links</h4>
                 <p className="mb-2">Here are the links from your past uploads</p>
@@ -61,7 +64,7 @@ export default function Links() {
                 {
                     (Object.keys(savedLinks).length) ?
                         <>
-                        { showModal  && <ShowQrCode />}
+                            {showModal && <ShowQrCode />}
                             <p className="notification is-info is-light p-3 mb-5">
                                 All links will become invalid after 24 hours from when it was generated.
                             </p>
@@ -79,19 +82,19 @@ export default function Links() {
                                         {
                                             savedLinks.map((el, ind) => {
                                                 return (
-                                                        <tr key={ind}>
-                                                            <td>{++ind}</td>
-                                                            <td>{el.link}</td>
-                                                            <td>
-                                                                {(el.expTime) ? getHours(el.expTime) +" Hours" : ""}
-                                                                </td>
-                                                            <td className="has-text-centered">
-                                                                <button data-link={btoa(el.link)} onClick={handleQrCodeBtn} className="button is-danger">QR code</button>
-                                                            </td>
-                                                            <td className="has-text-centered">
-                                                                <button data-link={btoa(el.link)} onClick={handleCopy} className="button is-primary">Copy link</button>
-                                                            </td>
-                                                        </tr>
+                                                    <tr key={ind}>
+                                                        <td>{++ind}</td>
+                                                        <td>{el.link}</td>
+                                                        <td>
+                                                            {(el.expTime) ? getHours(el.expTime) + " Hours" : ""}
+                                                        </td>
+                                                        <td className="has-text-centered">
+                                                            <button data-link={btoa(el.link)} onClick={handleQrCodeBtn} className="button is-danger">QR code</button>
+                                                        </td>
+                                                        <td className="has-text-centered">
+                                                            <button data-link={btoa(el.link)} onClick={handleCopy} className="button is-primary">Copy link</button>
+                                                        </td>
+                                                    </tr>
                                                 )
                                             })
                                         }
