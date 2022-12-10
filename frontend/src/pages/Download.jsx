@@ -50,7 +50,7 @@ export default function Download() {
     };
     React.useEffect(() => {
         if (fileId) {
-            const url = new URL(import.meta.env.VITE_BACKEND_URL + '/file_meta.php');
+            const url = new URL(import.meta.env.VITE_BACKEND_URL + '/file_data.php');
             //add file link as query to the url object
             url.searchParams.append('fileId', fileId);
             window.addEventListener('load', function () {
