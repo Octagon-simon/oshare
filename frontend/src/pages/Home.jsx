@@ -102,9 +102,6 @@ export default function Home() {
                                 Drag & drop some files here, or click to select files
                             </p>
                         )}
-                        {/* <button type="button" onClick={open} className="btn">
-                            Click to select files
-                        </button> */}
                     </div>
                 </div>
                 {

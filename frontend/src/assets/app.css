@@ -9,6 +9,11 @@ body {
     font-family: 'poppins', sans-serif;
 }
 
+.navbar-item-active{
+    background-color: #dafffa;
+    border-bottom: 2px solid #00d1b2;
+}
+
 div#root {
     height: auto !important;
     min-height: 100%;
@@ -112,9 +117,10 @@ div#root {
     margin: 0 !important;
 }
 
-.m-auto{
+.m-auto {
     margin: auto !important;
 }
+
 .tabs.is-toggle li.is-active:first-child a {
     background-color: #00d1b2;
     border-color: #00d1b2;
@@ -329,9 +335,11 @@ ul.file-stats li>span {
     padding: 10px;
     border-radius: 5px;
 }
-.progress-section{
-    margin:10px 0;
+
+.progress-section {
+    margin: 10px 0;
 }
+
 .progress.is-secondary::-webkit-progress-value {
     background-color: var(--secondary)
 }
@@ -344,7 +352,7 @@ ul.file-stats li>span {
     background-color: var(--secondary)
 }
 
-span.file-size{
+span.file-size {
     max-width: 100px;
     display: block;
     margin: auto;
@@ -353,12 +361,20 @@ span.file-size{
     font-size: 1rem;
 }
 
-.caution-container{
+.caution-container {
     background-color: #0004FF0D;
     margin: 10% auto;
     padding: 30px;
     max-width: 700px !important;
 }
+
+.footer {
+    margin: 10% 0 0 0;
+    background-color: #000;
+    padding: 3rem;
+    color: #fff;
+}
+
 :root {
     --primary: rgb(0, 4, 255);
     --secondary: #c44d96;
