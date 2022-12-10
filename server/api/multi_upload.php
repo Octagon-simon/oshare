@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             if (true) {
                 $fileUploadStamp = time();
                 //save to database
-                $db->Insert("INSERT INTO FILES (file_id, file_name, in_dir_name, file_upload_date, exp_time, timezone) VALUES (:id, :name, :in_dir_name, :date, :expTime, :timezone)", [
+                $db->Insert("INSERT INTO files (file_id, file_name, in_dir_name, file_upload_date, exp_time, timezone) VALUES (:id, :name, :in_dir_name, :date, :expTime, :timezone)", [
                     "id" => $file_id,
                     "name" => $file_name,
                     "in_dir_name" => $in_dir_name,
