@@ -84,7 +84,9 @@ export default function Download() {
     }, [fileId])
 
     //init request to download file
-    const doDownload = () => {
+    const doDownload = (e) => {
+        const btn = e.target;
+        btn.classList.toggle('is-loading');
         const url = new URL(import.meta.env.VITE_BACKEND_URL + '/download.php');
         //add file link as query to the url object
         url.searchParams.append('fileId', fileId);
@@ -102,8 +104,10 @@ export default function Download() {
                     // frag.appendChild(a);
                     // a.click();
                     downloadFile(downloadLink, data.file_name)
+                    btn.classList.remove('is-loading');
                     // URL.revokeObjectURL(href);
                 } else {
+                    btn.classList.remove('is-loading');
                     //handle errors here
                 }
             })
