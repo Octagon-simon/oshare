@@ -3,7 +3,6 @@ import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'react-toastify';
 import useLinkAction from "./hooks/LinkAction";
 import useTimeFormat from "./hooks/TimeFormat";
-import DoMeta from "./functions/DoMeta";
 
 export default function Links() {
     const [data, setData] = useState("")
@@ -56,7 +55,6 @@ export default function Links() {
 
     return (
         <>
-            <DoMeta title={"Oshare: My Links"} desc={"View & Copy links to files that you have uploaded"} image="/oshare-new.png" />
             <div className="container history-container mw-500 p-3 mt-5">
                 <h4 className="title is-4 mb-3">My Links</h4>
                 <p className="mb-2">Here are the links from your past uploads</p>
