@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useTimeFormat from "./hooks/TimeFormat";
 import useLinkAction from "./hooks/LinkAction";
-import DoMeta from "./functions/doMeta";
+import DoMeta from "./functions/DoMeta";
 
 export default function Download() {
     const fileId = useParams().fileId.trim()

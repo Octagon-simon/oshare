@@ -6,7 +6,7 @@ import { useDropzone } from 'react-dropzone'
 import { ToastContainer, toast } from 'react-toastify';
 import useLinkAction from "./hooks/LinkAction";
 import useTimeFormat from "./hooks/TimeFormat";
-import DoMeta from "./functions/doMeta";
+import DoMeta from "./functions/DoMeta";
 
 export default function Home() {
     const { saveLink } = useLinkAction()

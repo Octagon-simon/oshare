@@ -3,7 +3,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'react-toastify';
 import useLinkAction from "./hooks/LinkAction";
 import useTimeFormat from "./hooks/TimeFormat";
-import DoMeta from "./functions/doMeta";
+import DoMeta from "./functions/DoMeta";
 
 export default function Links() {
     const [data, setData] = useState("")
