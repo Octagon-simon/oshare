@@ -11,11 +11,6 @@ export default function Download() {
     const [error, setError] = useState("File does not exist")
     const {getHours} = useTimeFormat()
     const {deleteLink} = useLinkAction()
-    // if(!fileId) {
-    //     navigate('/', {
-    //         replace : true
-    //     })
-    // }
 
     /**
      * 
