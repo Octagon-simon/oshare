@@ -38,6 +38,10 @@ export default function Navbar() {
         }
     }, [location])
 
+    // 👇️ scroll to top on page load
+    React.useEffect(() => {
+        window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    }, []);
     //useEffect is like using event listeners on a variable
     //the second argument checks if the variable has changed its value
     //the variable can be passed as a state that can be updated

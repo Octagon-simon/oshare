@@ -48,6 +48,13 @@ export default function Download() {
                 URL.revokeObjectURL(href);
             });
     };
+    const doFileSize = (bytes) => {
+        const mb = Math.round(Number(bytes) / 1024 / 1024);
+        const kb = Math.round(Number(bytes) / 1024);
+
+        return (mb) ? mb+" Mb" : kb+" Kb"
+    };
+
     React.useEffect(() => {
         if (fileId) {
             const url = new URL(import.meta.env.VITE_BACKEND_URL + '/file_data.php');
@@ -154,7 +161,7 @@ export default function Download() {
                         <img width="150px" src="/file-download.svg" />
                         <p className="mt-4 mb-4"><span className="title is-6">File Name:</span> {data.file_name}</p>
                         <p className="has-text-centered mb-5">
-                            <span className="file-size tag is-info is-light">{Math.round(Number(data.file_size) / 1024 / 1024)} Mb</span>
+                            <span className="file-size tag is-info is-light">{doFileSize(data.file_size)}</span>
                         </p>
                         <button className="button is-app-primary btn-act radius-0" onClick={doDownload}>Download Now</button>
                     </section>
