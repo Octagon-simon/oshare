@@ -66,7 +66,11 @@ function cors() {
         // you want to allow, and if so:
         header("Access-Control-Allow-Origin: ORIGIN");
         header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Max-Age: 86400');    // cache for 1 day
+        header('Access-Control-Max-Age: 86400');    // cache preflight requests for 1 day
+        //Dont cache response
+        header("Cache-Control: no-cache, must-revalidate"); //HTTP 1.1
+        header("Pragma: no-cache"); //HTTP 1.0
+        header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
     }
     
     // Access-Control headers are received during OPTIONS requests

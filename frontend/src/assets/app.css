@@ -9,9 +9,9 @@ body {
     font-family: 'poppins', sans-serif;
 }
 
-.navbar-item-active{
-    background-color: #dafffa;
-    border-bottom: 2px solid #00d1b2;
+.navbar-item-active {
+    background-color: #fc466b1a !important;
+    border-bottom: 2px solid #f54770 !important;
 }
 
 div#root {
@@ -373,6 +373,10 @@ span.file-size {
     background-color: #000;
     padding: 3rem;
     color: #fff;
+}
+
+.has-text-app-primary {
+    color: var(--primary) !important;
 }
 
 :root {

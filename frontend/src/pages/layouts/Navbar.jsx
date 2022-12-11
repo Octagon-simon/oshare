@@ -26,6 +26,12 @@ export default function Navbar() {
                 })
                 //console.log(window.location.origin + location.pathname + location.search)
                 //set the active class on the element with the current url pathname
+                // document.querySelectorAll('a[href]').forEach(el => {
+                //     const res = el.href.match(new RegExp(location.pathname, 'i'));
+                //     if(res && res.length){
+                //         return el.classList.add('navbar-item-active')
+                //     }
+                // })
                 const elem = (location.pathname && !location.search) ? document.querySelector(
                     `a[href="${location.pathname}"]`
                 ) : document.querySelector(
@@ -61,18 +67,18 @@ export default function Navbar() {
             />
             <nav className="navbar is-fixed-top" role="navigation" aria-label="main navigation">
                 <div className="navbar-brand">
-                    <a className="navbar-item font-pacifico" href="./">
+                    <a className="navbar-item" href="./">
                         Oshare
                     </a>
 
-                    <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="sanBlogNavBar" onClick={(event) => toggleMobileNav(event)}>
+                    <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="oshareNavbar" onClick={(event) => toggleMobileNav(event)}>
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
                     </a>
                 </div>
 
-                <div id="sanBlogNavBar" className="navbar-menu">
+                <div id="oshareNavbar" className="navbar-menu">
                     <div className="navbar-start">
                         <Link onClick={unToggleMobileNav} to="/" className="navbar-item">
                             Home

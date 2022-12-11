@@ -1,15 +1,15 @@
 import React, {useState} from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import useTimeFormat from "./hooks/TimeFormat";
 import useLinkAction from "./hooks/LinkAction";
 
 export default function Download() {
     const fileId = useParams().fileId.trim()
-    const navigate = useNavigate()
-    const [data, setData] = useState({})
-    const [error, setError] = useState("File does not exist")
+    const [response, setResponse] = useState({})
+    const [prog, setProg] = useState("loading")
     const {getHours} = useTimeFormat()
     const {deleteLink} = useLinkAction()
+    const location = useLocation();
 
     /**
      * 
@@ -29,16 +29,18 @@ export default function Download() {
      //feedback or issue report form
      * 
      */
-    function downloadFile(url, fileName) {
-        fetch(url, { method: 'get', mode: 'cors' })
+    async function downloadFile(url, fileName) {
+        await fetch(url, { method: 'get', mode: 'cors' })
             .then(res => res.blob())
             .then(res => {
+                const frag = document.createDocumentFragment();
                 const aElement = document.createElement('a');
                 aElement.setAttribute('download', fileName);
                 const href = URL.createObjectURL(res);
                 aElement.href = href;
                 // aElement.setAttribute('href', href);
                 aElement.setAttribute('target', '_blank');
+                frag.appendChild(aElement);
                 aElement.click();
                 URL.revokeObjectURL(href);
             });
@@ -55,25 +57,26 @@ export default function Download() {
             const url = new URL(import.meta.env.VITE_BACKEND_URL + '/file_data.php');
             //add file link as query to the url object
             url.searchParams.append('fileId', fileId);
-            window.addEventListener('load', function () {
-                fetch(url.href, {
-                    method: "GET",
-                    mode: 'cors'
-                })
-                    .then(res => res.json())
-                    .then(response => {
-                        if (response.success) {
-                            setData(response.data);
-                        } else {
-                            //handle errors here
-                            setError(response.data.message)
-                            deleteLink(fileId);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
+            fetch(url.href, {
+                method: "GET",
+                mode: 'cors'
             })
+                .then(res => res.json())
+                .then(response => {
+                    setResponse(response)
+                    if (response.success) {
+                        //change progress state
+                        setProg("loaded")
+                    } else {
+                        //handle errors here
+                        deleteLink(fileId);
+                        setProg("failed")
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                    setProg("failed")
+                })
         }
         //ask sir about this duplicate request stuff
     }, [fileId])
@@ -90,20 +93,14 @@ export default function Download() {
             mode: 'cors'
         })
             .then(res => res.json())
-            .then(response => {
-                if (response.success) {
-                    const downloadLink = import.meta.env.VITE_BACKEND_URL + '/'+ response.data.download_link;
-                    // a.setAttribute('target', '_blank');
-                    // // the filename you want
-                    // a.download = data.file_name;
-                    // frag.appendChild(a);
-                    // a.click();
-                    downloadFile(downloadLink, data.file_name)
-                    btn.classList.remove('is-loading');
-                    // URL.revokeObjectURL(href);
+            .then(Dresponse => {
+                if (Dresponse.success) {
+                    const downloadLink = import.meta.env.VITE_BACKEND_URL + '/'+ Dresponse.data.download_link;
+                    downloadFile(downloadLink, response.data.file_name).then( () => {
+                        btn.classList.remove('is-loading');
+                    })
                 } else {
                     btn.classList.remove('is-loading');
-                    //handle errors here
                 }
             })
             .catch(err => {
@@ -112,66 +109,69 @@ export default function Download() {
     }
 
     return (
-        <>
-        { (Object.keys(data).length) ?
-            <section className="container download-container">
-                <div className="columns">
-                    <div className="column is-half">&nbsp;</div>
-                    <div className="column is-half" style={{maxWidth: "450px", margin:"auto"}}>
-                        <h4 className="title is-5 mb-2">FILE STATS</h4>
-                        <table className="table is-bordered is-fullwidth">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        File Views
-                                    </td>
-                                    <td>
-                                        {data.file_views || 0}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        File Downloads
-                                    </td>
-                                    <td>
-                                        {data.file_downloads || 0}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Last Downloaded On
-                                    </td>
-                                    <td>
-                                        {data.file_last_download_date || "No Downloads yet"}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+            (prog === "loading") ? 
+                <p className="has-text-centered" style={{margin : "15% 0"}}><i className="fas fa-fan has-text-app-primary fa-spin fa-6x"></i></p>
+            : 
+            <>
+            { (Object.keys(response.data).length) ?
+                <section className="container download-container">
+                    <div className="columns">
+                        <div className="column is-half">&nbsp;</div>
+                        <div className="column is-half" style={{maxWidth: "450px", margin:"auto"}}>
+                            <h4 className="title is-5 mb-2">FILE STATS</h4>
+                            <table className="table is-bordered is-fullwidth">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            File Views
+                                        </td>
+                                        <td>
+                                            {response.data.file_views || 0}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            File Downloads
+                                        </td>
+                                        <td>
+                                            {response.data.file_downloads || 0}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Last Downloaded On
+                                        </td>
+                                        <td>
+                                            {response.data.file_last_download_date || "No Downloads yet"}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                <div className="notification is-info is-light">
-                    <p className="m-0 has-text-centered">This file will be deleted after <b>{getHours(new Date(data.exp_time))}</b> Hours</p>
-                </div>
-                <div className="download-section">
-                    <section className="has-text-centered">
-                        <img width="150px" src="/file-download.svg" />
-                        <p className="mt-4 mb-4"><span className="title is-6">File Name:</span> {data.file_name}</p>
-                        <p className="has-text-centered mb-5">
-                            <span className="file-size tag is-info is-light">{doFileSize(data.file_size)}</span>
-                        </p>
-                        <button className="button is-app-primary btn-act radius-0" onClick={doDownload}>Download Now</button>
-                    </section>
-                </div>
-            </section>
-        : 
-            <section className="container caution-container">
-                <div className="has-text-centered">
-                    <img src="/caution.svg" width="150px" />
-                    <p className="mt-2 title is-4">{error}</p>
-                </div>
-            </section>
+                    <div className="notification is-info is-light">
+                        <p className="m-0 has-text-centered">This file will be deleted after <b>{getHours(new Date(response.data.exp_time))}</b> Hours</p>
+                    </div>
+                    <div className="download-section">
+                        <section className="has-text-centered">
+                            <img width="150px" src="/file-download.svg" />
+                            <p className="mt-4 mb-4"><span className="title is-6">File Name:</span> {response.data.file_name}</p>
+                            <p className="has-text-centered mb-5">
+                                <span className="file-size tag is-info is-light">{doFileSize(response.data.file_size)}</span>
+                            </p>
+                            <button className="button is-app-primary btn-act radius-0" onClick={doDownload}>Download Now</button>
+                        </section>
+                    </div>
+                </section>
+                : 
+                <section className="container caution-container">
+                    <div className="has-text-centered">
+                        <img src="/caution.svg" width="150px" />
+                        <p className="mt-2 title is-4">{response.data.message}</p>
+                    </div>
+                </section>
         }
-        </>
+            </>
     )
 }
 //on load, make a fetch request to retrieve file meta, name, size, date uploaded, then anchor with attribute download to make a direct request to the file using onclick 
