@@ -6,7 +6,8 @@ import Home from './pages/Home';
 import Links from './pages/Links';
 import Download from './pages/Download';
 import Contact from './pages/Contact';
-import About from './pages/About';
+import HowToUse from './pages/HowToUse';
+import NoPage from './pages/NoPage';
 
 function App() {
 
@@ -17,9 +18,10 @@ function App() {
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
           <Route path="links" element={<Links />} />
-          <Route path="about" element={<About />} />
+          <Route path="how-to-use" element={<HowToUse />} />
           <Route path="contact" element={<Contact />} />
           <Route path="download/:fileId" element={<Download />} />
+          <Route path="*" element={<NoPage />} />
           {/* <Route path="test" element={<Test />} />
           <Route path="posts" element={<Posts />} />
           <Route path="new-post" element={<NewPost />} />

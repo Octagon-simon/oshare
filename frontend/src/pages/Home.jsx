@@ -375,7 +375,7 @@ export default function Home() {
             </section>
 
             <div className="container p-4">
-                <section className="section-upload">
+                <section id="upload" className="section-upload">
                     <div className="upload-tabs">
                         <div className="tabs is-toggle is-centered">
                             <ul>

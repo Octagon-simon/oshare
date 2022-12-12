@@ -14,9 +14,9 @@ export default function Links() {
         const link = e.target.getAttribute('data-link')
         if (link) {
             window.navigator.clipboard.writeText(atob(link)).then(() => {
-                toast.info("File Link has been copied")
+                toast.info("File Link has been copied 🤩")
             }, () => {
-                toast.error("Failed to copy snippet")
+                toast.error("Failed to copy link 😔")
             })
         }
     }
