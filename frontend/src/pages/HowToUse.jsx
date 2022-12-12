@@ -6,10 +6,9 @@ export default function HowToUse() {
     }
     return (
         <>
-            <section className="container mt-5 shadow p-4">
+            <section className="container mt-5 p-4">
                 <article>
                     <h3 className="title is-3 has-text-centered">How To Use</h3>
-                    <h4 className="title is-4 mb-2"><i className="fas fa-star"></i>&nbsp;About the app</h4>
                     <p className="p-2" style={pStyle}>Oshare is an App that enables you share files between two or more people irrespective of the distance. <br />
                         All you need to do is to Upload the file that you wish to share, once the upload is successful, a <strong>unique</strong> link will be generated for you.<br />
                         Now you just have to copy the link generated, share it to the people that need access to the file uploaded.</p>
