@@ -8,6 +8,7 @@ import Download from './pages/Download';
 import Contact from './pages/Contact';
 import HowToUse from './pages/HowToUse';
 import NoPage from './pages/NoPage';
+import Test from './pages/Test';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="how-to-use" element={<HowToUse />} />
           <Route path="contact" element={<Contact />} />
           <Route path="download/:fileId" element={<Download />} />
+          <Route path="test" element={<Test />} />
           <Route path="*" element={<NoPage />} />
           {/* <Route path="test" element={<Test />} />
           <Route path="posts" element={<Posts />} />

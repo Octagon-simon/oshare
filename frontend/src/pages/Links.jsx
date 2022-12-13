@@ -3,6 +3,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'react-toastify';
 import useLinkAction from "./hooks/LinkAction";
 import useTimeFormat from "./hooks/TimeFormat";
+import { Helmet } from "react-helmet";
 
 export default function Links() {
     const [data, setData] = useState("")
@@ -55,6 +56,11 @@ export default function Links() {
 
     return (
         <>
+            <Helmet>
+                <title>My File Links</title>
+                <meta property="og:title" content="My File Links" />
+                <meta name="description" content="Visit this page to copy and view the QR codes of the links to your uploaded files." />
+            </Helmet>
             <div className="container history-container mw-500 p-3 mt-5">
                 <h4 className="title is-4 mb-3">My Links</h4>
                 <p className="mb-2">Here are the links from your past uploads</p>

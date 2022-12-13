@@ -1,12 +1,18 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 
-export default function NoPage(){
+export default function NoPage() {
     const style = {
         transform: "translate(-50%, 50%)",
         left: "50%"
     }
     return (
         <>
+            <Helmet>
+                <title>404: Page Not Found</title>
+                <meta property="og:title" content="Page Not Found" />
+                <meta name="description" content="The page you are requesting for cannot be found anywhere in our server" />
+            </Helmet>
             <section className="container p-3" style={style}>
                 <div className="has-text-centered">
                     <img src="/sad.svg" width="150px" />

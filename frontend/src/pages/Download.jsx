@@ -2,6 +2,9 @@ import React, {useState} from "react";
 import { useParams, useLocation } from "react-router-dom";
 import useTimeFormat from "./hooks/TimeFormat";
 import useLinkAction from "./hooks/LinkAction";
+import Core from "./hooks/Core";
+import {toast} from 'react-toastify'
+import {Helmet} from "react-helmet";
 
 export default function Download() {
     const fileId = useParams().fileId.trim()
@@ -10,7 +13,8 @@ export default function Download() {
     const {getHours} = useTimeFormat()
     const {deleteLink} = useLinkAction()
     const location = useLocation();
-
+    const {doFileSize} = Core();
+    const [progress, setProgress] = useState(0);
     /**
      * 
      * signup -> email and password
@@ -29,27 +33,60 @@ export default function Download() {
      //feedback or issue report form
      * 
      */
-    async function downloadFile(url, fileName) {
-        await fetch(url, { method: 'get', mode: 'cors' })
-            .then(res => res.blob())
-            .then(res => {
+    function downloadFile(url, fileName) {
+        // await fetch(url, { method: 'get', mode: 'cors' })
+        //     .then(res => res.blob())
+        //     .then(res => {
+        //         const frag = document.createDocumentFragment();
+        //         const aElement = document.createElement('a');
+        //         aElement.setAttribute('download', fileName);
+        //         const href = URL.createObjectURL(res);
+        //         aElement.href = href;
+        //         // aElement.setAttribute('href', href);
+        //         aElement.setAttribute('target', '_blank');
+        //         frag.appendChild(aElement);
+        //         aElement.click();
+        //         URL.revokeObjectURL(href);
+        //     });
+
+        var xhr = new XMLHttpRequest();
+        //set the response type as blob
+        xhr.responseType = "blob";
+            // listen for upload progress
+            xhr.addEventListener('progress', function (event) {
+                console.log("yaay")
+                document.querySelector('#transfer_section').classList.remove('d-none')
+                setProgress(Math.round(100 * event.loaded / event.total));
+            });
+
+            // handle error
+            xhr.upload.onerror = function () {
+                console.log(`Error during the upload: ${xhr.status}.`);
+                toast.error("Sorry, we couldn't transfer this file 😔")
+            };
+
+            // upload completed successfully
+            xhr.onload = function (res) {
+                toast.info("Downloading file 😎")
                 const frag = document.createDocumentFragment();
                 const aElement = document.createElement('a');
                 aElement.setAttribute('download', fileName);
-                const href = URL.createObjectURL(res);
+                //send blob object to function
+                const href = URL.createObjectURL(res.target.response);
                 aElement.href = href;
                 // aElement.setAttribute('href', href);
                 aElement.setAttribute('target', '_blank');
                 frag.appendChild(aElement);
                 aElement.click();
                 URL.revokeObjectURL(href);
-            });
-    };
-    const doFileSize = (bytes) => {
-        const mb = Math.round(Number(bytes) / 1024 / 1024);
-        const kb = Math.round(Number(bytes) / 1024);
 
-        return (mb) ? mb+" Mb" : kb+" Kb"
+                //hide progress section
+                document.querySelector('#transfer_section').classList.toggle('d-none');
+                document.querySelector('#download_button').classList.remove('is-loading');
+            };
+
+            xhr.open('GET', url);
+            xhr.send();
     };
 
     React.useEffect(() => {
@@ -78,7 +115,6 @@ export default function Download() {
                     setProg("failed")
                 })
         }
-        //ask sir about this duplicate request stuff
     }, [fileId])
 
     //init request to download file
@@ -93,12 +129,14 @@ export default function Download() {
             mode: 'cors'
         })
             .then(res => res.json())
-            .then(Dresponse => {
-                if (Dresponse.success) {
-                    const downloadLink = import.meta.env.VITE_BACKEND_URL + '/'+ Dresponse.data.download_link;
-                    downloadFile(downloadLink, response.data.file_name).then( () => {
-                        btn.classList.remove('is-loading');
-                    })
+            .then(res => {
+                if (res.success) {
+                    const downloadLink = import.meta.env.VITE_BACKEND_URL + '/'+ res.data.download_link;
+                    downloadFile(downloadLink, response.data.file_name)
+                    // .then( () => {
+                    //     btn.classList.remove('is-loading');
+                    //     toast.info("File has been downloaded 🤩")
+                    // })
                 } else {
                     btn.classList.remove('is-loading');
                 }
@@ -113,8 +151,13 @@ export default function Download() {
                 <p className="has-text-centered" style={{margin : "15% 0"}}><i className="fas fa-fan has-text-app-primary fa-spin fa-6x"></i></p>
             : 
             <>
-            { (Object.keys(response.data).length) ?
+            { (response?.success && Object.keys(response.data).length) ?
                 <section className="container download-container">
+                    <Helmet>
+                        <title>Download - {response.data.file_name} from Oshare</title>
+                        <meta property="og:title" content={"Download - "+response.data.file_name+" from Oshare"} />
+                        <meta name="description" content={"This File has "+response.data.file_downloads+" Visit Oshare now to download this file"} />
+                    </Helmet>
                     <div className="columns">
                         <div className="column is-half">&nbsp;</div>
                         <div className="column is-half" style={{maxWidth: "450px", margin:"auto"}}>
@@ -159,7 +202,11 @@ export default function Download() {
                             <p className="has-text-centered mb-5">
                                 <span className="file-size tag is-info is-light">{doFileSize(response.data.file_size)}</span>
                             </p>
-                            <button className="button is-app-primary btn-act radius-0" onClick={doDownload}>Download Now</button>
+                            <div id="transfer_section" className="progress-section d-none mt-3 mb-3" style={{maxWidth:"500px", margin : "auto"}}>
+                                <p className="mb-2">Please wait while we transfer this file ...</p>
+                                <progress className="progress is-info" value={progress} max="100">{progress}%</progress>
+                            </div>
+                            <button id="download_button" className="button is-app-primary btn-act radius-0" onClick={doDownload}>Download Now</button>
                         </section>
                     </div>
                 </section>

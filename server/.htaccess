@@ -1,4 +1,4 @@
-Header set Access-Control-Allow-Origin "https://oshare.onrender.com"
+Header set Access-Control-Allow-Origin "http://localhost:5173"
 Header set Access-Control-Allow-Methods "GET,POST"
 Header set Access-Control-Allow-Headers "Content-Type"
 ###Don't allow the server to cache results

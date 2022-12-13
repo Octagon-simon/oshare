@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { octaValidate } from "octavalidate-reactjs";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 
 export default function Contact() {
 
@@ -34,21 +35,26 @@ export default function Contact() {
                 mode: 'no-cors',
                 body: formData,
             })
-            .then(res => res.text())
-            .then((r) => {
-                console.log(r);
-                btn.classList.remove('is-loading')
-                toast.success("Your message has been delivered 🤩")
-            })
-            .catch((r) => {
-                console.log(r);
-                btn.classList.remove('is-loading')
-                toast.error("Sorry, we couldn't send your message right now")
-            });
+                .then(res => res.text())
+                .then((r) => {
+                    console.log(r);
+                    btn.classList.remove('is-loading')
+                    toast.success("Your message has been delivered 🤩")
+                })
+                .catch((r) => {
+                    console.log(r);
+                    btn.classList.remove('is-loading')
+                    toast.error("Sorry, we couldn't send your message right now")
+                });
         }
     };
     return (
         <>
+            <Helmet>
+                <title>Contact us</title>
+                <meta property="og:title" content="Contact us" />
+                <meta name="description" content="Send us a message right now and we will be in touch" />
+            </Helmet>
             <section className="hero is-medium">
                 <div className="hero-body">
                     <div className="container has-text-centered" style={{ top: '30%' }}>

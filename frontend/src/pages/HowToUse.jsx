@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 
 export default function HowToUse() {
     const pStyle = {
@@ -6,6 +7,11 @@ export default function HowToUse() {
     }
     return (
         <>
+            <Helmet>
+                <title>How to use Oshare</title>
+                <meta property="og:title" content="How to use Oshare" />
+                <meta name="description" content="Learn how you can use Oshare to upload and send files with ease" />
+            </Helmet>
             <section className="container mt-5 p-4">
                 <article>
                     <h3 className="title is-3 has-text-centered">How To Use</h3>
@@ -38,7 +44,7 @@ export default function HowToUse() {
                         <p className="has-text-centered">
                             <a href="./" className="mt-3 button btn-act is-app-primary">Start uploading&nbsp;<i className="fa-sm fas fa-arrow-right"></i></a>
                         </p>
-                        
+
                     </div>
                 </article>
             </section>

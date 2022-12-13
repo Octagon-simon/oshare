@@ -1,43 +1,38 @@
 import React, { useState } from "react";
 import { QRCodeSVG } from 'qrcode.react';
-import { unmountComponentAtNode } from 'react-dom';
 import { octaValidate } from 'octavalidate-reactjs'
 import { useDropzone } from 'react-dropzone'
 import { ToastContainer, toast } from 'react-toastify';
 import useLinkAction from "./hooks/LinkAction";
 import useTimeFormat from "./hooks/TimeFormat";
+import Core from "./hooks/Core";
+import {Helmet} from "react-helmet";
 
 export default function Home() {
     const { saveLink } = useLinkAction()
     const [data, setData] = useState({})
     const [progress, setProgress] = useState(0)
     const { addExpiry } = useTimeFormat()
+    const { doFileSize } = Core()
+    const [uploadCont, setUploadCont] = useState("single");
+
     function MyDropzone({ open }) {
 
-        const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
-            useDropzone({});
+        const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({useFsAccessApi : false});
 
-        // const files = acceptedFiles.map((file) => (
-        //     <li key={file.path}>
-        //         {file.path} - {file.size} bytes
-        //     </li>
-        // ));
         const removeFile = (name) => {
             //what if 2 files have the same name?
             //find the index of the file in the array
             const index = acceptedFiles.findIndex((file) => file.name == name)
             //remove file from array
             acceptedFiles.splice(index, 1)
-            // unmountComponentAtNode(document.querySelector(`div.dropped-file[data-key="${name}"]`))
-            // setRenderDropzoneCont(true)
-            // getFiles()
             //remove file preview from DOM
             document.querySelector(`div[data-key="${name}"]`).style.display = "none"
             console.log("Accepted files", acceptedFiles)
             //document.querySelector(`div[data-key="${name}"]`).remove()
             //check if browser supports data transfer
             if (typeof DataTransfer === "function") {
-                console.log("yes lord")
+                console.info("Data transfer is supported")
                 //multi file input
                 const multiInput = document.querySelector('#inp_multi_file').files
                 //recreate filelist by assigning to a new array
@@ -51,8 +46,7 @@ export default function Home() {
                 //add remaining files to the object
                 newFiles.forEach(file => dT.items.add(file))
                 //rebuild file list
-                multiInput.files = dT.files
-                console.log(multiInput.files)
+                document.querySelector('#inp_multi_file').files = dT.files
             }
         }
         const files = acceptedFiles.map((file) => (
@@ -60,7 +54,7 @@ export default function Home() {
                 <div className="dropped-file" data-key={file.name}>
                     <div className="file-meta">
                         <p>{file.name.substring(0, 9) + '...'}</p>
-                        <p>{Math.round(Number(file.size) / 1024 / 1024)} MB</p>
+                        <p>{doFileSize(file.size)}</p>
                     </div>
                     <div className="file-img">
                         {
@@ -88,10 +82,11 @@ export default function Home() {
             gap: "5px",
             margin: "auto"
         }
+        console.log(acceptedFiles)
         return (
-            <div id="inp_multi_file_wrapper" className="container" onClick={open} style={style}>
+            <div id="inp_multi_file_wrapper" className="container" style={style}>
                 <div {...getRootProps({ className: "dropzone" })}>
-                    <input name="multi_files[]" octavalidate="R" id="inp_multi_file" {...getInputProps()} />
+                    <input onClick={open} name="multi_files[]" octavalidate="R" id="inp_multi_file" {...getInputProps()} />
                     <div className="text-center">
                         {isDragActive ? (
                             <p className="dropzone-content">
@@ -112,8 +107,6 @@ export default function Home() {
     }
 
     const DoFinal = ({ prop }) => {
-        console.log(data)
-        console.log("final foolishly loaded")
         const DoSuccess = () => {
             setTimeout(() => {
                 document.querySelector('.success-img-section')?.remove();
@@ -147,6 +140,7 @@ export default function Home() {
                         </section>
 
                         <div className="field">
+                            <p className="mb-2">Share this link with your friends</p>
                             <ul className="list-unstyled list-inline mt-2 ml-0">
                                 <li className="list-inline-item">
                                     <a target="_blank" title="Share this on Twitter" className="button is-info"
@@ -183,20 +177,6 @@ export default function Home() {
                                             <DoSuccess />
                                         }
                                     </div>
-                                    {/* <nav className="level is-mobile">
-                                        <div className="level-left">
-                                            <a className="level-item" aria-label="retweet">
-                                                <span className="icon is-small">
-                                                    <i className="fas fa-retweet" aria-hidden="true"></i>
-                                                </span>
-                                            </a>
-                                            <a className="level-item" aria-label="like">
-                                                <span className="icon is-small">
-                                                    <i className="fas fa-heart" aria-hidden="true"></i>
-                                                </span>
-                                            </a>
-                                        </div>
-                                    </nav> */}
                                 </div>
                             </article>
                         </div>
@@ -331,42 +311,57 @@ export default function Home() {
         //get the current input
         return (document.querySelector('.file-name').innerText = e.target.files[0].name)
     }
-    const switchContainer = (e) => {
-        const id = e.target.getAttribute('upload-container');
-        if (id == "single") {
-            //set active class on the tab element
-            document.querySelector('li#single').classList.toggle('is-active');
-            //make upload container a block element
-            document.querySelector('#upload_container_single').classList.toggle('d-block');
-            //make element visible to user
-            document.querySelector('#upload_container_single').scrollIntoView()
-            /*** ***/
-            document.querySelector('#upload_container_multiple').classList.remove('d-block');
-            //remove active class on the other tab element
-            document.querySelector('li#multiple').classList.remove('is-active');
-        } else {
-            //set active class on the tab element
-            document.querySelector('li#multiple').classList.toggle('is-active');
-            //make upload container a block element
-            document.querySelector('#upload_container_multiple').classList.toggle('d-block');
-            //make element visible to user
-            document.querySelector('#upload_container_multiple').scrollIntoView()
-            /*** ***/
-            document.querySelector('#upload_container_single').classList.remove('d-block');
-            //remove active class on the other tab element
-            document.querySelector('li#single').classList.remove('is-active');
+    //I used a state to better handle it because I felt that this was not the best way to handle it
+    //Thank you JAH
+    // const switchContainer = (e) => {
+    //     const id = e.target.getAttribute('upload-container');
+    //     if (id == "single") {
+    //         //set active class on the tab element
+    //         document.querySelector('li#single').classList.toggle('is-active');
+    //         //make upload container a block element
+    //         document.querySelector('#upload_container_single').classList.toggle('d-block');
+    //         //make element visible to user
+    //         document.querySelector('#upload').scrollIntoView()
+    //         /*** ***/
+    //         document.querySelector('#upload_container_multiple').classList.remove('d-block');
+    //         //remove active class on the other tab element
+    //         document.querySelector('li#multiple').classList.remove('is-active');
+    //     } else {
+    //         //set active class on the tab element
+    //         document.querySelector('li#multiple').classList.toggle('is-active');
+    //         //make upload container a block element
+    //         document.querySelector('#upload_container_multiple').classList.toggle('d-block');
+    //         //make element visible to user
+    //         document.querySelector('#upload').scrollIntoView()
+    //         /*** ***/
+    //         document.querySelector('#upload_container_single').classList.remove('d-block');
+    //         //remove active class on the other tab element
+    //         document.querySelector('li#single').classList.remove('is-active');
+    //     }
+    // }
+
+    React.useEffect(() => {
+        if (uploadCont) {
+
+            document.querySelector('#upload').scrollIntoView()
         }
-    }
+    }, [uploadCont])
+
     return (
         <>
             {
                 (Object.keys(data).length) ? <DoFinal prop={data} /> : null
             }
             <section className="hero is-medium has-navbar-fixed-top">
+                <Helmet>
+                    <title>Oshare: Upload and Share links to files that matter</title>
+                    <meta property="og:title" content="Upload and Share links to files that matter" />
+                    <meta name="description" content="Upload and Share links to files that matter" />
+                </Helmet>
                 <div className="hero-body">
                     <div className="container m-none" style={{ top: '30%' }}>
                         <h1 className="title home-title has-text-light">Upload & Share links to files that matter</h1>
-                        <p className="has-text-light font-pacifico">Share links to files instead of files</p>
+                        <p className="has-text-light font-pacifico">Making file sharing super easy for you</p>
                         <div id="homeBtn" className="mt-5">
                             <a href="#upload" className="btn-act button is-app-primary is-medium">Get started</a>
                         </div>
@@ -379,13 +374,13 @@ export default function Home() {
                     <div className="upload-tabs">
                         <div className="tabs is-toggle is-centered">
                             <ul>
-                                <li id="single" onClick={switchContainer} upload-container="single" className="is-active">
+                                <li id="single" onClick={(e) => setUploadCont("single")} upload-container="single" className={uploadCont == "single" ? "is-active" : ""}>
                                     <a upload-container="single">
                                         <span upload-container="single" className="icon is-small"><i className="fas fa-file" aria-hidden="true"></i></span>
                                         <span upload-container="single">Single File Upload</span>
                                     </a>
                                 </li>
-                                <li upload-container="multiple" onClick={switchContainer} id="multiple">
+                                <li upload-container="multiple" onClick={(e) => setUploadCont("multiple")} id="multiple" className={uploadCont == "multiple" ? "is-active" : ""}>
                                     <a upload-container="multiple">
                                         <span upload-container="multiple" className="icon is-small"><i className="fas fa-copy" aria-hidden="true"></i></span>
                                         <span upload-container="multiple">Multi File Upload</span>
@@ -394,68 +389,65 @@ export default function Home() {
                             </ul>
                         </div>
                     </div>
-                    <div id="upload_container_single" className="upload-container p-5 d-block">
-                        <section>
-                            <h3 className="title is-4">Upload Single File</h3>
-                        </section>
-                        <section>
-                            <div className="notification is-info is-light">
-                                <p className="m-none">All Uploaded files last for 24 hours</p>
+                    {
+                        (uploadCont && uploadCont == "single") ?
+
+                            <div id="upload_container_single" className="upload-container p-5">
+                                <section>
+                                    <h3 className="title is-4">Upload Single File</h3>
+                                </section>
+                                <section>
+                                    <div className="notification is-info is-light">
+                                        <p className="m-none">All Uploaded files last for 24 hours</p>
+                                    </div>
+                                </section>
+                                <form id="upload_single" onSubmit={handleSingleFileUpload}>
+                                    <div className="file has-name is-right is-fullwidth" id="inp_single_file_wrapper">
+                                        <label className="file-label">
+                                            <input onChange={setFileName} octavalidate="R" id="inp_single_file" className="file-input" type="file" name="single_file" />
+                                            <span className="file-cta">
+                                                <span className="file-icon">
+                                                    <i className="fas fa-upload"></i>
+                                                </span>
+                                                <span className="file-label">
+                                                    Choose a file
+                                                </span>
+                                            </span>
+                                            <span className="file-name">
+                                                No file selected
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div id="single_progress_section" className="progress-section d-none">
+                                        <progress className="progress is-primary" value={progress} max="100">{progress}%</progress>
+                                    </div>
+                                    <div className="field mt-4">
+                                        <button form="upload_single" type="submit" className="button is-primary">Upload file</button>
+                                    </div>
+                                </form>
                             </div>
-                        </section>
-                        <form id="upload_single" onSubmit={handleSingleFileUpload}>
-                            <div className="file has-name is-right is-fullwidth" id="inp_single_file_wrapper">
-                                <label className="file-label">
-                                    <input onChange={setFileName} octavalidate="R" id="inp_single_file" className="file-input" type="file" name="single_file" />
-                                    <span className="file-cta">
-                                        <span className="file-icon">
-                                            <i className="fas fa-upload"></i>
-                                        </span>
-                                        <span className="file-label">
-                                            Choose a file
-                                        </span>
-                                    </span>
-                                    <span className="file-name">
-                                        No file selected
-                                    </span>
-                                </label>
+                            :
+                            <div id="upload_container_multiple" className="upload-container p-5">
+                                <section>
+                                    <h3 className="title is-4">Upload Multiple Files</h3>
+                                </section>
+                                <section>
+                                    <div className="notification is-info is-light">
+                                        <p className="m-none">All Uploaded files last for 24 hours</p>
+                                    </div>
+                                </section>
+                                <form action="" id="upload_multiple" encType="multipart/form-data" onSubmit={handleMultiFileUpload}>
+
+                                    <MyDropzone />
+                                    <div id="multi_progress_section" className="progress-section d-none">
+                                        <progress className="progress is-danger" value={progress} max="100">{progress}%</progress>
+                                    </div>
+                                    <div className="field mt-4">
+                                        <button form="upload_multiple" type="submit" className="button is-app-secondary">Upload file</button>
+                                    </div>
+                                </form>
                             </div>
-                            <div id="single_progress_section" className="progress-section d-none">
-                                <progress className="progress is-primary" value={progress} max="100">{progress}%</progress>
-                            </div>
-                            <div className="field mt-4">
-                                <button form="upload_single" type="submit" className="button is-primary">Upload file</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div id="upload_container_multiple" className="upload-container p-5">
-                        <section>
-                            <h3 className="title is-4">Upload Multiple Files</h3>
-                        </section>
-                        <section>
-                            <div className="notification is-info is-light">
-                                <p className="m-none">All Uploaded files last for 24 hours</p>
-                            </div>
-                        </section>
-                        <form action="" id="upload_multiple" encType="multipart/form-data" onSubmit={handleMultiFileUpload}>
-                            {/* {
-                            React.useEffect(() => {
-                                if (renderDropzoneCont) {
-                                    console.log(renderDropzoneCont);
-                                    setRenderDropzoneCont(false)
-                                }
-                            }, [renderDropzoneCont])
-                        }
-                         */}
-                            <MyDropzone />
-                            <div id="multi_progress_section" className="progress-section d-none">
-                                <progress className="progress is-danger" value={progress} max="100">{progress}%</progress>
-                            </div>
-                            <div className="field mt-4">
-                                <button form="upload_multiple" type="submit" className="button is-app-secondary">Upload file</button>
-                            </div>
-                        </form>
-                    </div>
+                    }
                 </section>
             </div>
         </>
