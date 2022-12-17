@@ -212,7 +212,7 @@ export default function Download() {
                                 : 
                                 <p className="notification is-danger is-light">File downloads are not supported in this browser yet, please try to download this file again on <b>Chrome</b> or <b>Firefox</b> or <b>Microsoft Edge</b></p>
                             }
-                            
+                            {detectAgent()}
                         </section>
                     </div>
                 </section>
