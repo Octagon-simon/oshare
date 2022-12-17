@@ -203,10 +203,10 @@ export default function Download() {
                                 <span className="file-size tag is-info is-light">{doFileSize(response.data.file_size)}</span>
                             </p>
                             <div id="transfer_section" className="progress-section d-none mt-3 mb-3" style={{maxWidth:"500px", margin : "auto"}}>
-                                <p className="mb-2">Please wait while we transfer this file ...</p>
+                                <p className="mb-2">Transferring file ...</p>
                                 <progress className="progress is-info" value={progress} max="100">{progress}%</progress>
                             </div>
-                            <button id="download_button" className="button is-app-primary btn-act radius-0" onClick={doDownload}>Download Now</button>
+                            <button id="download_button" className="button is-app-primary radius-0" onClick={doDownload}>Download Now</button>
                         </section>
                     </div>
                 </section>
