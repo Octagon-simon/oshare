@@ -13,7 +13,7 @@ export default function Download() {
     const {getHours} = useTimeFormat()
     const {deleteLink} = useLinkAction()
     const location = useLocation();
-    const {doFileSize} = Core();
+    const {doFileSize, detectAgent} = Core();
     const [progress, setProgress] = useState(0);
     /**
      * 
@@ -206,7 +206,13 @@ export default function Download() {
                                 <p className="mb-2">Transferring file ...</p>
                                 <progress className="progress is-info" value={progress} max="100">{progress}%</progress>
                             </div>
-                            <button id="download_button" className="button is-app-primary radius-0" onClick={doDownload}>Download Now</button>
+                            {
+                                ( (detectAgent() != 'safari' && detectAgent() != 'opera')) ? 
+                                    <button id="download_button" className="button is-app-primary radius-0" onClick={doDownload}>Download Now</button>
+                                : 
+                                <p className="notification is-danger is-light">File downloads are not supported in this browser yet, please try to download this file again on <b>Chrome</b> or <b>Firefox</b> or <b>Microsoft Edge</b></p>
+                            }
+                            
                         </section>
                     </div>
                 </section>
