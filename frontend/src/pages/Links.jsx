@@ -106,7 +106,6 @@ export default function Links() {
                                 </table>
                             </div>
                         </>
-
                         :
                         <>
                             <div className="p-5 notification is-danger is-light">

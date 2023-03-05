@@ -15,24 +15,7 @@ export default function Download() {
     const location = useLocation();
     const {doFileSize, detectAgent} = Core();
     const [progress, setProgress] = useState(0);
-    /**
-     * 
-     * signup -> email and password
-     * login -> email and password
-     * forgotten password
-     * 
-     * 
-     * dashboard -> image, 
-     * 
-     * dashboard -> add new customer, image (not required, premium), contact(premium),   name, measurement, due_date(premium users)
-     * 
-     * create a new customer, then add measurements
-     * 
-     * settings => phone_number, alt_phone, tailor profile image 
-     * 
-     //feedback or issue report form
-     * 
-     */
+
     function downloadFile(url, fileName) {
         // await fetch(url, { method: 'get', mode: 'cors' })
         //     .then(res => res.blob())
@@ -54,7 +37,7 @@ export default function Download() {
         xhr.responseType = "blob";
             // listen for upload progress
             xhr.addEventListener('progress', function (event) {
-                console.log("yaay")
+                // console.log("yaay")
                 document.querySelector('#transfer_section').classList.remove('d-none')
                 setProgress(Math.round(100 * event.loaded / event.total));
             });
@@ -148,7 +131,10 @@ export default function Download() {
 
     return (
             (prog === "loading") ? 
+            <>
                 <p className="has-text-centered" style={{margin : "15% 0"}}><i className="fas fa-fan has-text-app-primary fa-spin fa-6x"></i></p>
+                <p>Please wait</p>
+            </>
             : 
             <>
             { (response?.success && Object.keys(response.data).length) ?

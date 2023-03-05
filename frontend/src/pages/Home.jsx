@@ -363,7 +363,7 @@ export default function Home() {
                         <h1 className="title home-title has-text-light">Upload & Share links to files that matter</h1>
                         <p className="has-text-light font-pacifico">Making file sharing super easy for you</p>
                         <div id="homeBtn" className="mt-5">
-                            <a href="#upload" className="btn-act button is-app-primary is-medium">Get started</a>
+                            <a href="/how-to-use" className="btn-act button is-app-primary is-medium">Get started</a>
                         </div>
                     </div>
                 </div>
