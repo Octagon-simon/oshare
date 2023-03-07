@@ -1,7 +1,7 @@
 export const name = 'Oshare';
 export const short_name = 'Oshare';
 export const desription = "Upload any file and share the link to your friends";
-export const theme_color = '#0004ff';
+export const theme_color = '#026EFA';
 export const background_color = '#fff';
 export const display = 'standalone';
 export const scope = '/';
