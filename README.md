@@ -82,7 +82,13 @@ Now copy the API folder in `./server/` to your `www` or `htdocs` folder.
 
 > If you are confused, take a look at how to set up a local development server (LAMP, WAMP OR XAMPP)
 
-Now head over to `./frontend/.env.php` and modify the BACKEND_URL to reflect the path to the API folder.
+Now create a `.env` file inside the `./frontend` folder and add the line below
+
+```
+VITE_BACKEND_URL = YOUR_API_FOLDER
+``` 
+
+> Make sure **YOUR_API_FOLDER** reflects the path to your API folder. 
 
 Once you are done, use the command below to fire up the server
 

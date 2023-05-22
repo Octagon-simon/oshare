@@ -10,7 +10,7 @@
     define('DB_PASS', '');
     define('DB_NAME', 'oshare');
 
-    define('DOWNLOAD_URL', "https://oshare.firegist.com.ng/api/download?file=");
+    define('DOWNLOAD_URL', "");
     define('UPLOAD_DIR', "uploads/");
     define('DOWNLOAD_DIR', "uploads/");
 ?>
